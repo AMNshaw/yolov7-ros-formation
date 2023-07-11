@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+        <arg name="vehicle1" value="iris_1"/>
+        <arg name="vehicle2" value="iris_2"/>
+        <arg name="vehicle3" value="iris_3"/>
+
+        <group ns="$(arg vehicle1)">
+                <include file="$(find yolov7_ros)/launch/yolov7.launch">
+                        <arg name="input_topic" value="/$(arg vehicle1)/camera/rgb/image_raw"/>
+                </include>
+        </group>
+        <group ns="$(arg vehicle2)">
+                <include file="$(find yolov7_ros)/launch/yolov7.launch">
+                        <arg name="input_topic" value="/$(arg vehicle2)/camera/rgb/image_raw"/>
+                </include>
+        </group>
+        <group ns="$(arg vehicle3)">
+                <include file="$(find yolov7_ros)/launch/yolov7.launch">
+                        <arg name="input_topic" value="/$(arg vehicle3)/camera/rgb/image_raw"/>
+                        <arg name="device" value="cpu"/>
+                </include>
+        </group>
+</launch>
