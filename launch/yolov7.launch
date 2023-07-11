@@ -2,12 +2,14 @@
 <launch>
     <arg name="input_topic" default="image_raw"/>
     <arg name="device" default="cuda"/>
+    <arg name="weights_path" default="wt/drone.pt"/>
+    <arg name="classes_path" default="/home/ncrl/gazebo_sim_ws/tools/yolov7_params/class_labels/test.txt"/>
 
     <node pkg="yolov7_ros" type="detect_ros.py" name="detect" output="screen" ns="yolov7">
         <!-- Download the official weights from the original repo -->
-        <param name="weights_path" type="str" value="/home/ncrl/gazebo_sim_ws/src/yolov7-ros/wt/drone.pt"/>
+        <param name="weights_path" type="str" value="$(arg weights_path)"/>
         <!-- Path to a class_labels.txt file containing your desired class labels. The i-th entry corresponds to the i-th class id. For example, in coco class label 0 corresponds to 'person'. Files for the coco and berkeley deep drive datasets are provided in the 'class_labels/' directory. If you leave it empty then no class labels are visualized.-->
-        <param name="classes_path" type="str" value="/home/ncrl/gazebo_sim_ws/src/yolov7-ros/class_labels/test.txt" />
+        <param name="classes_path" value="$(arg classes_path)" />
         <!-- topic name to subscribe to -->
         <param name="img_topic" type="str" value="$(arg input_topic)" />
         <!-- topic name for the detection output -->

@@ -3,20 +3,24 @@
         <arg name="vehicle1" value="iris_1"/>
         <arg name="vehicle2" value="iris_2"/>
         <arg name="vehicle3" value="iris_3"/>
+        <arg name="weights_path" value="/home/ncrl/gazebo_sim_ws/tools/yolov7_params/weights/drone.pt"/>
 
         <group ns="$(arg vehicle1)">
                 <include file="$(find yolov7_ros)/launch/yolov7.launch">
                         <arg name="input_topic" value="/$(arg vehicle1)/camera/rgb/image_raw"/>
+                        <arg name="weights_path" value="$(arg weights_path)"/>
                 </include>
         </group>
         <group ns="$(arg vehicle2)">
                 <include file="$(find yolov7_ros)/launch/yolov7.launch">
                         <arg name="input_topic" value="/$(arg vehicle2)/camera/rgb/image_raw"/>
+                        <arg name="weights_path" value="$(arg weights_path)"/>
                 </include>
         </group>
         <group ns="$(arg vehicle3)">
                 <include file="$(find yolov7_ros)/launch/yolov7.launch">
                         <arg name="input_topic" value="/$(arg vehicle3)/camera/rgb/image_raw"/>
+                        <arg name="weights_path" value="$(arg weights_path)"/>
                         <arg name="device" value="cpu"/>
                 </include>
         </group>
