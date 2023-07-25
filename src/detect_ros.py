@@ -16,6 +16,9 @@ import rospy
 
 from vision_msgs.msg import Detection2DArray, Detection2D, BoundingBox2D
 from sensor_msgs.msg import Image
+from std_msgs.msg import Int16MultiArray
+
+
 from cv_bridge import CvBridge
 
 
@@ -107,6 +110,12 @@ class Yolov7Publisher:
             vis_topic, Image, queue_size=queue_size
         ) if visualize else None
 
+        bbox_topic = pub_topic + "bbox" if pub_topic.endswith("/") else \
+            pub_topic + "/boundingBox"
+        self.boundingBox_publisher = rospy.Publisher(
+            bbox_topic, Int16MultiArray, queue_size=queue_size
+        ) if visualize else None
+
         self.bridge = CvBridge()
 
         self.tensorize = ToTensor()
@@ -158,12 +167,25 @@ class Yolov7Publisher:
         # visualizing if required
         if self.visualization_publisher:
             bboxes = [[int(x1), int(y1), int(x2), int(y2)]
-                      for x1, y1, x2, y2 in detections[:, :4].tolist()]
+                      for x1, y1, x2, y2 in detections[:, :4].tolist()] 
             classes = [int(c) for c in detections[:, 5].tolist()]
             vis_img = draw_detections(np_img_orig, bboxes, classes,
                                       self.class_labels)
             vis_msg = self.bridge.cv2_to_imgmsg(vis_img, encoding="bgr8")
             self.visualization_publisher.publish(vis_msg)
+
+            #bbox_float = [[float(num) for num in sublist] for sublist in bboxes]
+            #bbox_center = [((u1 + u2) / 2, (v1 + v2) / 2) for u1, v1, u2, v2 in bbox_float]
+
+            bbox_msg = Int16MultiArray()
+            classes = np.array([classes])
+            bboxes = np.array(bboxes)
+            classes = np.transpose(np.array(classes))
+            if len(bboxes.shape) == 2 :
+                bbox_data = np.concatenate((classes, bboxes), axis=1)
+                bbox_data = np.array([item for sublist in bbox_data for item in sublist])
+                bbox_msg.data = bbox_data
+                self.boundingBox_publisher.publish(bbox_msg)
 
 
 if __name__ == "__main__":
