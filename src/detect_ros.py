@@ -16,7 +16,7 @@ import rospy
 
 from vision_msgs.msg import Detection2DArray, Detection2D, BoundingBox2D
 from sensor_msgs.msg import Image
-from std_msgs.msg import Int32MultiArray
+from state_estimation.msg import Int32MultiArrayStamped
 
 
 from cv_bridge import CvBridge
@@ -113,7 +113,7 @@ class Yolov7Publisher:
         bbox_topic = pub_topic + "bbox" if pub_topic.endswith("/") else \
             pub_topic + "/boundingBox"
         self.boundingBox_publisher = rospy.Publisher(
-            bbox_topic, Int32MultiArray, queue_size=queue_size
+            bbox_topic, Int32MultiArrayStamped, queue_size=queue_size
         ) if visualize else None
 
         self.bridge = CvBridge()
@@ -178,7 +178,8 @@ class Yolov7Publisher:
             #bbox_float = [[float(num) for num in sublist] for sublist in bboxes]
             #bbox_center = [((u1 + u2) / 2, (v1 + v2) / 2) for u1, v1, u2, v2 in bbox_float]
 
-            bbox_msg = Int32MultiArray()
+            bbox_msg = Int32MultiArrayStamped()
+            bbox_msg.header = img_msg.header
             classes = np.array([classes])
             bboxes = np.array(bboxes)
             classes = np.transpose(np.array(classes))

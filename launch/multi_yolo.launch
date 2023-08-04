@@ -21,7 +21,7 @@
                 <include file="$(find yolov7_ros)/launch/yolov7.launch">
                         <arg name="input_topic" value="/$(arg vehicle3)/camera/rgb/image_raw"/>
                         <arg name="weights_path" value="$(arg weights_path)"/>
-                        <arg name="device" value="cpu"/>
+                        <arg name="device" value="cuda"/>
                 </include>
         </group>
 </launch>
