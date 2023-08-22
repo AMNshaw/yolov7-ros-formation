@@ -11,12 +11,12 @@
                         <arg name="weights_path" value="$(arg weights_path)"/>
                 </include>
         </group>
-        <group ns="$(arg vehicle2)">
+        <!--group ns="$(arg vehicle2)">
                 <include file="$(find yolov7_ros)/launch/yolov7.launch">
                         <arg name="input_topic" value="/$(arg vehicle2)/camera/rgb/image_raw"/>
                         <arg name="weights_path" value="$(arg weights_path)"/>
                 </include>
-        </group>
+        </group-->
         <group ns="$(arg vehicle3)">
                 <include file="$(find yolov7_ros)/launch/yolov7.launch">
                         <arg name="input_topic" value="/$(arg vehicle3)/camera/rgb/image_raw"/>
